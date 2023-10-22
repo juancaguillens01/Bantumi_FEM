@@ -17,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Locale;
 
+import es.upm.miw.bantumi.FinalAlertDialog;
 import es.upm.miw.bantumi.model.BantumiViewModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -108,12 +109,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.opciones_menu, menu);
         return true;
     }
 
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
 //            case R.id.opcAjustes: // @todo Preferencias
@@ -129,6 +132,10 @@ public class MainActivity extends AppCompatActivity {
 
             // @TODO!!! resto opciones
 
+            case R.id.opcReiniciarPartida:
+                new RestartAlertDialog().show(getSupportFragmentManager(), "RESTART ALERT_DIALOG");
+                return true;
+
             default:
                 Snackbar.make(
                         findViewById(android.R.id.content),
@@ -138,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
+
 
     /**
      * Acción que se ejecuta al pulsar sobre cualquier hueco
