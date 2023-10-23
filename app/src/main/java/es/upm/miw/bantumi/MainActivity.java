@@ -1,6 +1,7 @@
 package es.upm.miw.bantumi;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -15,6 +16,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Locale;
 
 import es.upm.miw.bantumi.FinalAlertDialog;
@@ -22,7 +26,7 @@ import es.upm.miw.bantumi.model.BantumiViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
-    protected final String LOG_TAG = "MiW";
+    protected final String LOG_TAG = "MiW MainActivity";
     JuegoBantumi juegoBantumi;
     BantumiViewModel bantumiVM;
     int numInicialSemillas;
@@ -96,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Muestra el valor <i>valor</i> en la posición <i>pos</i>
      *
-     * @param pos posición a actualizar
+     * @param pos   posición a actualizar
      * @param valor valor a mostrar
      */
     private void mostrarValor(int pos, int valor) {
@@ -133,8 +137,14 @@ public class MainActivity extends AppCompatActivity {
             // @TODO!!! resto opciones
 
             case R.id.opcReiniciarPartida:
-                new RestartAlertDialog().show(getSupportFragmentManager(), "RESTART ALERT_DIALOG");
+                this.reiniciarPartida();
                 return true;
+
+            case R.id.opcGuardarPartida:
+                this.guardarPartida();
+                this.mostrarSnackbarGuardarPartida();
+                return true;
+
 
             default:
                 Snackbar.make(
@@ -144,6 +154,54 @@ public class MainActivity extends AppCompatActivity {
                 ).show();
         }
         return true;
+    }
+
+    /**
+     * Reinicia la partida
+     */
+    private void reiniciarPartida() {
+        new RestartAlertDialog().show(getSupportFragmentManager(), "RESTART ALERT_DIALOG");
+    }
+
+    /**
+     * Guarda la partida
+     */
+    private void guardarPartida() {
+        String partidaSerializada = juegoBantumi.serializa();
+        this.archivarPartida(partidaSerializada);
+    }
+
+    /**
+     * Muestra un snackbar indicando que la partida se ha guardado correctamente
+     */
+    private void mostrarSnackbarGuardarPartida() {
+        Snackbar.make(
+                findViewById(android.R.id.content),
+                getString(R.string.txtPartidaGuardada),
+                950
+        ).show();
+    }
+
+    /**
+     * Guarda la partida serializada en un fichero de texto guardado en la memoria interna del dispositivo
+     * @param partidaSerializada String que contiene la partida serializada
+     */
+    private void archivarPartida(String partidaSerializada) {
+        try {
+            FileOutputStream fos;
+
+            fos = openFileOutput(getString(R.string.ficheroPartidasGuardadas), Context.MODE_PRIVATE);
+            fos.write(partidaSerializada.getBytes());
+            fos.close();
+        } catch (FileNotFoundException e) {
+            Log.e(LOG_TAG, "FICHERO NO ENCONTRADO: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "ERROR I/O: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -198,11 +256,11 @@ public class MainActivity extends AppCompatActivity {
             texto = "¡¡¡ EMPATE !!!";
         }
         Snackbar.make(
-                findViewById(android.R.id.content),
-                texto,
-                Snackbar.LENGTH_LONG
-        )
-        .show();
+                        findViewById(android.R.id.content),
+                        texto,
+                        Snackbar.LENGTH_LONG
+                )
+                .show();
 
         // @TODO guardar puntuación
 
