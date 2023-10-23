@@ -16,9 +16,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Locale;
 
 import es.upm.miw.bantumi.FinalAlertDialog;
@@ -145,6 +148,10 @@ public class MainActivity extends AppCompatActivity {
                 this.mostrarSnackbarGuardarPartida();
                 return true;
 
+            case R.id.opcRecuperarPartida:
+                this.posibilidadRecuperarPartida();
+                return true;
+
 
             default:
                 Snackbar.make(
@@ -169,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
     private void guardarPartida() {
         String partidaSerializada = juegoBantumi.serializa();
         this.archivarPartida(partidaSerializada);
+        Log.d(LOG_TAG, "Partida guardada: " + partidaSerializada);
     }
 
     /**
@@ -193,6 +201,54 @@ public class MainActivity extends AppCompatActivity {
             fos = openFileOutput(getString(R.string.ficheroPartidasGuardadas), Context.MODE_PRIVATE);
             fos.write(partidaSerializada.getBytes());
             fos.close();
+            Log.i(LOG_TAG, "Fichero cerrado correctamente");
+        } catch (FileNotFoundException e) {
+            Log.e(LOG_TAG, "FICHERO NO ENCONTRADO: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "ERROR I/O: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Recupera la partida guardada en un fichero de texto guardado en la memoria interna del dispositivo
+     */
+    private void posibilidadRecuperarPartida() {
+        if (this.juegoBantumi.isPartidaEmpezada()) {
+            new RecoverAlertDialog().show(getSupportFragmentManager(), "RECOVER ALERT_DIALOG");
+        }
+        else {
+            this.recuperarPartida();
+        }
+    }
+
+    public void recuperarPartida() {
+        Log.i(LOG_TAG, "Recuperando partida del fichero de texto");
+        FileInputStream fis;
+        try {
+            BufferedReader fin = new BufferedReader(new InputStreamReader(openFileInput(getString(R.string.ficheroPartidasGuardadas))));
+            String linea = fin.readLine();
+            StringBuilder sb = new StringBuilder();
+            sb.append(linea).append("\n");
+            while (linea != null) {
+                linea = fin.readLine();
+                sb.append(linea).append("\n");
+            }
+
+            this.juegoBantumi.deserializa(sb.toString());
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.txtPartidaRecuperada),
+                    950
+            ).show();
+            Log.i(LOG_TAG, "Partida recuperada correctamente: " + linea);
+
+            fin.close();
+            Log.i(LOG_TAG, "Fichero cerrado correctamente");
+
         } catch (FileNotFoundException e) {
             Log.e(LOG_TAG, "FICHERO NO ENCONTRADO: " + e.getMessage());
             e.printStackTrace();

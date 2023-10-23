@@ -22,6 +22,8 @@ public class JuegoBantumi {
     // Número inicial de semillas
     private final int numInicialSemillas;
 
+    private boolean partidaEmpezada;
+
     /**
      * Constructor
      *
@@ -33,9 +35,14 @@ public class JuegoBantumi {
     public JuegoBantumi(BantumiViewModel bantumiVM, Turno turno, int numInicialSemillas) {
         this.bantumiVM = bantumiVM;
         this.numInicialSemillas = numInicialSemillas;
+        this.partidaEmpezada = false;
         if (campoVacio(Turno.turnoJ1) && campoVacio(Turno.turnoJ2)) { // Inicializa sólo si está vacío!!!
             inicializar(turno);
         }
+    }
+
+    public boolean isPartidaEmpezada() {
+        return this.partidaEmpezada;
     }
 
     /**
@@ -63,6 +70,7 @@ public class JuegoBantumi {
      */
     public void inicializar(Turno turno) {
         setTurno(turno);
+        this.partidaEmpezada = false;
         for (int i = 0; i < NUM_POSICIONES; i++)
             setSemillas(
                     i,
@@ -132,6 +140,9 @@ public class JuegoBantumi {
             setTurno(Turno.turnoJ2);
         else if (turnoActual() == Turno.turnoJ2 && nextPos != 13)
             setTurno(Turno.turnoJ1);
+
+        this.partidaEmpezada = true;
+
         Log.i("MiW", "\t turno = " + turnoActual());
     }
 

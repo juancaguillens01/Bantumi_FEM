@@ -27,6 +27,12 @@
     <string name="ficheroPartidasGuardadas">Partidas guardadas</string>
     <string name="txtPartidaGuardada">Partida guardada correctamente</string>
 
+    <!-- Recuperar partida -->
+    <string name="txtDialogoRecuperarPartidaTitulo">Recuperar Partida</string>
+    <string name="txtDialogoRecuperarPartidaPregunta">Ya hay una partida empezada, ¿estás seguro de que
+    quieres perder tus progresos y recuperar la partida guardada?</string>
+    <string name="txtPartidaRecuperada">Partida recuperada correctamente</string>
+
     <!-- Acerca de -->
     <string name="aboutText">Acerca de</string>
     <string name="aboutTitle">¿Cómo se juega?</string>
