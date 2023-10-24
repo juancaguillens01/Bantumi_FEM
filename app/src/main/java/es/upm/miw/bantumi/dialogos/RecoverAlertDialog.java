@@ -1,4 +1,4 @@
-package es.upm.miw.bantumi;
+package es.upm.miw.bantumi.dialogos;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -10,6 +10,9 @@ import androidx.appcompat.app.AppCompatDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.snackbar.Snackbar;
+
+import es.upm.miw.bantumi.MainActivity;
+import es.upm.miw.bantumi.R;
 
 public class RecoverAlertDialog extends DialogFragment {
 

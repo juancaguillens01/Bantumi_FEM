@@ -2,6 +2,7 @@ package es.upm.miw.bantumi;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -24,7 +25,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Locale;
 
-import es.upm.miw.bantumi.FinalAlertDialog;
+import es.upm.miw.bantumi.dialogos.RecoverAlertDialog;
+import es.upm.miw.bantumi.dialogos.RestartAlertDialog;
 import es.upm.miw.bantumi.model.BantumiViewModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
         bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
         juegoBantumi = new JuegoBantumi(bantumiVM, JuegoBantumi.Turno.turnoJ1, numInicialSemillas);
         crearObservadores();
+    }
+
+    public JuegoBantumi getJuegoBantumi() {
+        return this.juegoBantumi;
     }
 
     /**
@@ -126,9 +132,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.opcAjustes: // @todo Preferencias
-//                startActivity(new Intent(this, BantumiPrefs.class));
-//                return true;
+            case R.id.opcAjustes:
+                startActivity(new Intent(this, PreferencesActivity.class));
+                return true;
             case R.id.opcAcercaDe:
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.aboutTitle)
@@ -192,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Guarda la partida serializada en un fichero de texto guardado en la memoria interna del dispositivo
+     *
      * @param partidaSerializada String que contiene la partida serializada
      */
     private void archivarPartida(String partidaSerializada) {
@@ -219,8 +226,7 @@ public class MainActivity extends AppCompatActivity {
     private void posibilidadRecuperarPartida() {
         if (this.juegoBantumi.isPartidaEmpezada()) {
             new RecoverAlertDialog().show(getSupportFragmentManager(), "RECOVER ALERT_DIALOG");
-        }
-        else {
+        } else {
             this.recuperarPartida();
         }
     }

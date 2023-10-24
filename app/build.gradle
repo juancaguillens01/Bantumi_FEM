@@ -33,7 +33,16 @@ dependencies {
 
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
+
     // LiveData
     implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-core:$lifecycle_version"
+
+    // Preference
+    implementation "androidx.preference:preference:$preferenceVersion"
+
+    // Room
+    // Room
+    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
+    annotationProcessor "androidx.room:room-compiler:$rootProject.roomVersion"
 }

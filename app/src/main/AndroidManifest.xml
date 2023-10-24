@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Bantumi"
         tools:targetApi="s">
         <activity
+            android:name=".PreferencesActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -22,5 +25,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

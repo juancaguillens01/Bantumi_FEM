@@ -1,4 +1,4 @@
-package es.upm.miw.bantumi;
+package es.upm.miw.bantumi.dialogos;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -10,6 +10,10 @@ import androidx.appcompat.app.AppCompatDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.snackbar.Snackbar;
+
+import es.upm.miw.bantumi.JuegoBantumi;
+import es.upm.miw.bantumi.MainActivity;
+import es.upm.miw.bantumi.R;
 
 public class RestartAlertDialog extends DialogFragment {
 
@@ -30,7 +34,7 @@ public class RestartAlertDialog extends DialogFragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Log.i(LOG_TAG, "Reiniciando partida");
-                                main.juegoBantumi.inicializar(JuegoBantumi.Turno.turnoJ1);
+                                main.getJuegoBantumi().inicializar(JuegoBantumi.Turno.turnoJ1);
                                 Snackbar.make(
                                         requireActivity().findViewById(android.R.id.content),
                                         getString(R.string.txtPartidaReiniciada),
