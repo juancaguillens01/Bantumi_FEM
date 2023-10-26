@@ -1,4 +1,4 @@
-package es.upm.miw.bantumi;
+package es.upm.miw.bantumi.dialogos;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -7,6 +7,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialog;
 import androidx.fragment.app.DialogFragment;
+
+import es.upm.miw.bantumi.JuegoBantumi;
+import es.upm.miw.bantumi.MainActivity;
+import es.upm.miw.bantumi.R;
 
 public class FinalAlertDialog extends DialogFragment {
 
@@ -25,7 +29,7 @@ public class FinalAlertDialog extends DialogFragment {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                main.juegoBantumi.inicializar(JuegoBantumi.Turno.turnoJ1);
+                                main.getJuegoBantumi().inicializar(JuegoBantumi.Turno.turnoJ1);
                             }
                         }
                 )

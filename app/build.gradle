@@ -42,7 +42,6 @@ dependencies {
     implementation "androidx.preference:preference:$preferenceVersion"
 
     // Room
-    // Room
     implementation "androidx.room:room-runtime:$rootProject.roomVersion"
     annotationProcessor "androidx.room:room-compiler:$rootProject.roomVersion"
 }

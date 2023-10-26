@@ -3,6 +3,7 @@ package es.upm.miw.bantumi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -23,11 +25,15 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
 import java.util.Locale;
 
+import es.upm.miw.bantumi.dialogos.FinalAlertDialog;
 import es.upm.miw.bantumi.dialogos.RecoverAlertDialog;
 import es.upm.miw.bantumi.dialogos.RestartAlertDialog;
 import es.upm.miw.bantumi.model.BantumiViewModel;
+import es.upm.miw.bantumi.model.resultados.Resultados;
+import es.upm.miw.bantumi.model.resultados.ResultadosViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,11 +42,18 @@ public class MainActivity extends AppCompatActivity {
     BantumiViewModel bantumiVM;
     int numInicialSemillas;
 
+    ResultadosViewModel resultadosViewModel;
+    SharedPreferences sharedPref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        this.resultadosViewModel = new ViewModelProvider(this).get(ResultadosViewModel.class);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String nombreJugador = this.getNombreJugador1();
+        TextView tvJugador1 = findViewById(R.id.tvPlayer1);
+        tvJugador1.setText(nombreJugador);
         // Instancia el ViewModel y el juego, y asigna observadores a los huecos
         numInicialSemillas = getResources().getInteger(R.integer.intNumInicialSemillas);
         bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
@@ -50,6 +63,14 @@ public class MainActivity extends AppCompatActivity {
 
     public JuegoBantumi getJuegoBantumi() {
         return this.juegoBantumi;
+    }
+
+    private String getNombreJugador1() {
+        String nombreJugador = sharedPref.getString(getString(R.string.preferencesPlayerNameKey), getString(R.string.txtPlayer1));
+        if (nombreJugador.isEmpty()) {
+            nombreJugador = getString(R.string.txtPlayer1);
+        }
+        return nombreJugador;
     }
 
     /**
@@ -157,7 +178,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.opcRecuperarPartida:
                 this.posibilidadRecuperarPartida();
                 return true;
-
 
             default:
                 Snackbar.make(
@@ -325,6 +345,34 @@ public class MainActivity extends AppCompatActivity {
                 .show();
 
         // @TODO guardar puntuación
+
+        String nombreGanador;
+
+        if (juegoBantumi.getSemillas(6) > 6 * numInicialSemillas) {
+            nombreGanador = this.getNombreJugador1();
+        } else if (juegoBantumi.getSemillas(6) < 6 * numInicialSemillas) {
+            nombreGanador = getString(R.string.txtPlayer2);
+        }
+        else {
+            nombreGanador = getString(R.string.txtEmpate);
+        }
+
+        String nombreJugador1 = this.getNombreJugador1();
+        Integer semillasJugador1 = juegoBantumi.getSemillas(6);
+        Integer semillasJugador2 = juegoBantumi.getSemillas(13);
+        String fechaJuego = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            fechaJuego = LocalDateTime.now().toString();
+        }
+
+        Resultados resultados = new Resultados(fechaJuego, nombreJugador1, nombreGanador, semillasJugador1, semillasJugador2);
+        this.resultadosViewModel.insert(resultados);
+
+
+
+
+
+
 
         // terminar
         new FinalAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");

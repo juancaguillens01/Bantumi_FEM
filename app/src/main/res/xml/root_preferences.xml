@@ -5,7 +5,7 @@
 
         <EditTextPreference
             app:defaultValue="@string/txtPlayer1"
-            app:key="jugador1"
+            app:key="@string/preferencesPlayerNameKey"
             app:title="@string/prefTituloNombreJugador"
             app:useSimpleSummaryProvider="true"
             app:dialogMessage="@string/prefTextoNombreJugador"
