@@ -65,6 +65,12 @@ public class MainActivity extends AppCompatActivity {
         return this.juegoBantumi;
     }
 
+    public ResultadosViewModel getResultadosViewModel() {
+        return this.resultadosViewModel;
+    }
+
+
+
     private String getNombreJugador1() {
         String nombreJugador = sharedPref.getString(getString(R.string.preferencesPlayerNameKey), getString(R.string.txtPlayer1));
         if (nombreJugador.isEmpty()) {
@@ -164,8 +170,6 @@ public class MainActivity extends AppCompatActivity {
                         .show();
                 return true;
 
-            // @TODO!!! resto opciones
-
             case R.id.opcReiniciarPartida:
                 this.reiniciarPartida();
                 return true;
@@ -177,6 +181,10 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.opcRecuperarPartida:
                 this.posibilidadRecuperarPartida();
+                return true;
+
+            case R.id.opcMejoresResultados:
+                this.obtenerMejoresResultados();
                 return true;
 
             default:
@@ -251,6 +259,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Obtiene la partida guardada en un fichero de texto guardado en la memoria interna del dispositivo
+     */
     public void recuperarPartida() {
         Log.i(LOG_TAG, "Recuperando partida del fichero de texto");
         FileInputStream fis;
@@ -284,6 +295,11 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+
+    private void obtenerMejoresResultados() {
+        Intent intent = new Intent(MainActivity.this, ResultadosActivity.class);
+        startActivity(intent);
     }
 
 
@@ -332,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void finJuego() {
         String texto = (juegoBantumi.getSemillas(6) > 6 * numInicialSemillas)
-                ? "Gana Jugador 1"
+                ? "Gana " + this.getNombreJugador1()
                 : "Gana Jugador 2";
         if (juegoBantumi.getSemillas(6) == 6 * numInicialSemillas) {
             texto = "¡¡¡ EMPATE !!!";
@@ -344,17 +360,17 @@ public class MainActivity extends AppCompatActivity {
                 )
                 .show();
 
-        // @TODO guardar puntuación
-
         String nombreGanador;
-
+        Integer semillasGanador;
         if (juegoBantumi.getSemillas(6) > 6 * numInicialSemillas) {
             nombreGanador = this.getNombreJugador1();
+            semillasGanador = juegoBantumi.getSemillas(6);
         } else if (juegoBantumi.getSemillas(6) < 6 * numInicialSemillas) {
             nombreGanador = getString(R.string.txtPlayer2);
-        }
-        else {
+            semillasGanador = juegoBantumi.getSemillas(13);
+        } else {
             nombreGanador = getString(R.string.txtEmpate);
+            semillasGanador = juegoBantumi.getSemillas(6); // al azar
         }
 
         String nombreJugador1 = this.getNombreJugador1();
@@ -362,16 +378,15 @@ public class MainActivity extends AppCompatActivity {
         Integer semillasJugador2 = juegoBantumi.getSemillas(13);
         String fechaJuego = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            fechaJuego = LocalDateTime.now().toString();
+            fechaJuego = LocalDateTime.now().toString().replace("T", " ");
+            if (fechaJuego.length() >= 19) {
+                fechaJuego = fechaJuego.substring(0, 19);
+            }
         }
 
-        Resultados resultados = new Resultados(fechaJuego, nombreJugador1, nombreGanador, semillasJugador1, semillasJugador2);
+        Resultados resultados = new Resultados(fechaJuego, nombreJugador1, nombreGanador,
+                semillasJugador1, semillasJugador2, semillasGanador);
         this.resultadosViewModel.insert(resultados);
-
-
-
-
-
 
 
         // terminar

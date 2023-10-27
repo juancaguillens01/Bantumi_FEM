@@ -34,6 +34,12 @@
     quieres perder tus progresos y recuperar la partida guardada?</string>
     <string name="txtPartidaRecuperada">Partida recuperada correctamente</string>
 
+    <!-- Mejores resultados -->
+    <string name="mejoresResultadosText">Mejores Resultados</string>
+    <string name="txtDialogoBorrarResultadosTitulo">Borrar Resultados</string>
+    <string name="txtDialogoBorrarResultadosPregunta">¿Estás seguro de que desea borrar los mejores resultados?</string>
+    <string name="txtBorrarResultados">Borrar Resultados</string>
+
     <!-- Acerca de -->
     <string name="aboutText">Acerca de</string>
     <string name="aboutTitle">¿Cómo se juega?</string>

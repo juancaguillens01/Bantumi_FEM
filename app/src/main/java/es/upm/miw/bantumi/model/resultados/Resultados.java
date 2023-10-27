@@ -29,15 +29,19 @@ public class Resultados {
     @ColumnInfo(name = "semillasJugador2")
     private Integer semillasJugador2;
 
+    @ColumnInfo(name = "semillasGanador")
+    private Integer semillasGanador;
+
 
     public Resultados(String fechaJuego, String nombreJugador1,
                       String nombreGanador, Integer semillasJugador1,
-                      Integer semillasJugador2) {
+                      Integer semillasJugador2, Integer semillasGanador) {
         this.fechaJuego = fechaJuego;
         this.nombreJugador1 = nombreJugador1;
         this.nombreGanador = nombreGanador;
         this.semillasJugador1 = semillasJugador1;
         this.semillasJugador2 = semillasJugador2;
+        this.semillasGanador = semillasGanador;
     }
 
     @NonNull
@@ -89,5 +93,11 @@ public class Resultados {
         this.semillasJugador2 = semillasJugador2;
     }
 
+    public Integer getSemillasGanador() {
+        return this.semillasGanador;
+    }
 
+    public void setSemillasGanador(Integer semillasGanador) {
+        this.semillasGanador = semillasGanador;
+    }
 }
