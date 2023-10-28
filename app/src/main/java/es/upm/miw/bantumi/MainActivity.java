@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Chronometer;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,9 +43,12 @@ public class MainActivity extends AppCompatActivity {
     JuegoBantumi juegoBantumi;
     BantumiViewModel bantumiVM;
     int numInicialSemillas;
-
     ResultadosViewModel resultadosViewModel;
     SharedPreferences sharedPref;
+    Chronometer chronometer;
+    long duracionPartida;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +59,9 @@ public class MainActivity extends AppCompatActivity {
         String nombreJugador = this.getNombreJugador1();
         TextView tvJugador1 = findViewById(R.id.tvPlayer1);
         tvJugador1.setText(nombreJugador);
-        // Instancia el ViewModel y el juego, y asigna observadores a los huecos
         numInicialSemillas = getResources().getInteger(R.integer.intNumInicialSemillas);
         bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
+        chronometer = findViewById(R.id.chronometer);
         juegoBantumi = new JuegoBantumi(bantumiVM, JuegoBantumi.Turno.turnoJ1, numInicialSemillas);
         crearObservadores();
     }
@@ -65,11 +70,9 @@ public class MainActivity extends AppCompatActivity {
         return this.juegoBantumi;
     }
 
-    public ResultadosViewModel getResultadosViewModel() {
-        return this.resultadosViewModel;
+    public Chronometer getChronometer() {
+        return this.chronometer;
     }
-
-
 
     private String getNombreJugador1() {
         String nombreJugador = sharedPref.getString(getString(R.string.preferencesPlayerNameKey), getString(R.string.txtPlayer1));
@@ -208,7 +211,9 @@ public class MainActivity extends AppCompatActivity {
      * Guarda la partida
      */
     private void guardarPartida() {
+        this.duracionPartida = SystemClock.elapsedRealtime() - chronometer.getBase();
         String partidaSerializada = juegoBantumi.serializa();
+        partidaSerializada += "\n" + this.duracionPartida;
         this.archivarPartida(partidaSerializada);
         Log.d(LOG_TAG, "Partida guardada: " + partidaSerializada);
     }
@@ -264,15 +269,19 @@ public class MainActivity extends AppCompatActivity {
      */
     public void recuperarPartida() {
         Log.i(LOG_TAG, "Recuperando partida del fichero de texto");
-        FileInputStream fis;
         try {
             BufferedReader fin = new BufferedReader(new InputStreamReader(openFileInput(getString(R.string.ficheroPartidasGuardadas))));
             String linea = fin.readLine();
             StringBuilder sb = new StringBuilder();
             sb.append(linea).append("\n");
+            int i = 0;
             while (linea != null) {
+                if (i == 2) {
+                    this.chronometer.setBase(SystemClock.elapsedRealtime() - Long.parseLong(linea));
+                }
                 linea = fin.readLine();
                 sb.append(linea).append("\n");
+                i++;
             }
 
             this.juegoBantumi.deserializa(sb.toString());
@@ -309,6 +318,10 @@ public class MainActivity extends AppCompatActivity {
      * @param v Vista pulsada (hueco)
      */
     public void huecoPulsado(@NonNull View v) {
+        if (!this.juegoBantumi.isPartidaEmpezada()) {
+            this.chronometer.setBase(SystemClock.elapsedRealtime());
+            this.chronometer.start();
+        }
         String resourceName = getResources().getResourceEntryName(v.getId()); // pXY
         int num = Integer.parseInt(resourceName.substring(resourceName.length() - 2));
         Log.i(LOG_TAG, "huecoPulsado(" + resourceName + ") num=" + num);
@@ -347,6 +360,7 @@ public class MainActivity extends AppCompatActivity {
      * El juego ha terminado. Volver a jugar?
      */
     private void finJuego() {
+        this.chronometer.stop();
         String texto = (juegoBantumi.getSemillas(6) > 6 * numInicialSemillas)
                 ? "Gana " + this.getNombreJugador1()
                 : "Gana Jugador 2";
@@ -376,6 +390,7 @@ public class MainActivity extends AppCompatActivity {
         String nombreJugador1 = this.getNombreJugador1();
         Integer semillasJugador1 = juegoBantumi.getSemillas(6);
         Integer semillasJugador2 = juegoBantumi.getSemillas(13);
+        //chronometer.getBase();
         String fechaJuego = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             fechaJuego = LocalDateTime.now().toString().replace("T", " ");

@@ -26,7 +26,6 @@ public class JuegoBantumi {
 
     /**
      * Constructor
-     *
      * Inicializa el modelo sólo si éste está vacío
      *
      * @param turno especifica el turno inicial <code>[Turno.turnoJ1 || Turno.turnoJ2]</code>
@@ -78,6 +77,7 @@ public class JuegoBantumi {
                             ? 0
                             : numInicialSemillas
             );
+
     }
 
     /**

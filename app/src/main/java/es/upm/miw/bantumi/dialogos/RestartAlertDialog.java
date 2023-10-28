@@ -2,6 +2,7 @@ package es.upm.miw.bantumi.dialogos;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -35,6 +36,8 @@ public class RestartAlertDialog extends DialogFragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 Log.i(LOG_TAG, "Reiniciando partida");
                                 main.getJuegoBantumi().inicializar(JuegoBantumi.Turno.turnoJ1);
+                                main.getChronometer().stop();
+                                main.getChronometer().setBase(SystemClock.elapsedRealtime());
                                 Snackbar.make(
                                         requireActivity().findViewById(android.R.id.content),
                                         getString(R.string.txtPartidaReiniciada),
