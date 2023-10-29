@@ -1,11 +1,11 @@
 package es.upm.miw.bantumi;
 
+import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
-
-import android.os.Bundle;
 
 public class PreferencesActivity extends AppCompatActivity {
 

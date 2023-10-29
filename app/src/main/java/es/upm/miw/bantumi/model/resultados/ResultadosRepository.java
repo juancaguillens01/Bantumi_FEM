@@ -22,6 +22,7 @@ public class ResultadosRepository {
             resultadosDAO.insert(resultados);
         });
     }
+
     void deleteAll() {
         ResultadosDatabase.databaseWriteExecutor.execute(this.resultadosDAO::deleteAll);
     }

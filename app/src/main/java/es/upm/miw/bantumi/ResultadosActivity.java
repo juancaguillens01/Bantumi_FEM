@@ -38,11 +38,11 @@ public class ResultadosActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         resultadosViewModel.getMejoresResultados().observe(this, adapter::submitList);
 
-       CardView cardView = findViewById(R.id.cvResultados);
+        CardView cardView = findViewById(R.id.cvResultados);
 
-         cardView.setOnClickListener(v -> {
-              new DeleteAlertDialog().show(getSupportFragmentManager(), "DeleteAlertDialog");
-         });
+        cardView.setOnClickListener(v -> {
+            new DeleteAlertDialog().show(getSupportFragmentManager(), "DeleteAlertDialog");
+        });
 
     }
 

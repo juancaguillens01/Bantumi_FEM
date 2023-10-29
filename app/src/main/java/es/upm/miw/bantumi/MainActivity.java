@@ -22,7 +22,6 @@ import androidx.preference.PreferenceManager;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -49,19 +48,24 @@ public class MainActivity extends AppCompatActivity {
     long duracionPartida;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         this.resultadosViewModel = new ViewModelProvider(this).get(ResultadosViewModel.class);
+
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
         String nombreJugador = this.getNombreJugador1();
         TextView tvJugador1 = findViewById(R.id.tvPlayer1);
         tvJugador1.setText(nombreJugador);
+
         numInicialSemillas = getResources().getInteger(R.integer.intNumInicialSemillas);
         bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
+
         chronometer = findViewById(R.id.chronometer);
+
         juegoBantumi = new JuegoBantumi(bantumiVM, JuegoBantumi.Turno.turnoJ1, numInicialSemillas);
         crearObservadores();
     }

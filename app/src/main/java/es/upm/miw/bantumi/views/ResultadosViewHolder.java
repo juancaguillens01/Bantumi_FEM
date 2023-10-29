@@ -5,10 +5,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import es.upm.miw.bantumi.R;
-
 import androidx.recyclerview.widget.RecyclerView;
 
+import es.upm.miw.bantumi.R;
 import es.upm.miw.bantumi.model.resultados.Resultados;
 
 public class ResultadosViewHolder extends RecyclerView.ViewHolder {
