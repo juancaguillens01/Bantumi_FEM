@@ -394,7 +394,6 @@ public class MainActivity extends AppCompatActivity {
         String nombreJugador1 = this.getNombreJugador1();
         Integer semillasJugador1 = juegoBantumi.getSemillas(6);
         Integer semillasJugador2 = juegoBantumi.getSemillas(13);
-        //chronometer.getBase();
         String fechaJuego = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             fechaJuego = LocalDateTime.now().toString().replace("T", " ");
